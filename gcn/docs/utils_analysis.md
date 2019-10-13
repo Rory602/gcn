@@ -25,7 +25,7 @@ def preprocess_adj(adj):
  &emsp;&emsp;<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{D}_{i&space;i}=\sum_{j}&space;\tilde{A}_{i&space;j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{D}_{i&space;i}=\sum_{j}&space;\tilde{A}_{i&space;j}" title="\tilde{D}_{i i}=\sum_{j} \tilde{A}_{i j}" /></a>
  
 
-参考文献  
+**参考文献**  
 Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
 
 ```python
@@ -72,4 +72,4 @@ t_k = list()
 t_k.append(sp.eye(adj.shape[0]))
 t_k.append(scaled_laplacian)
 ```
-以上表示初始化的过程
+以上表示初始化的过程,将scaled Laplacian,令: <a href="https://www.codecogs.com/eqnedit.php?latex=\widetilde{L}=x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\widetilde{L}=x" title="\widetilde{L}=x" /></a>

@@ -60,16 +60,21 @@ class GraphConvolution(Layer):
 ```
 代码解析:
 ```python
-if not self.featureless:
-    pre_sup = dot(x, self.vars['weights_' + str(i)],
-                              sparse=self.sparse_inputs)
+ # convolve
+supports = list()
+for i in range(len(self.support)):
+    if not self.featureless:
+        pre_sup = dot(x, self.vars['weights_' + str(i)],
+                      sparse=self.sparse_inputs)
     else:
         pre_sup = self.vars['weights_' + str(i)]
-        support = dot(self.support[i], pre_sup, sparse=True)
+    support = dot(self.support[i], pre_sup, sparse=True)
+    supports.append(support)
+output = tf.add_n(supports)
+
 ```
 以上代码是如下公式的实现:
-<a href="https://www.codecogs.com/eqnedit.php?latex=Z=\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}&space;X&space;\Theta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Z=\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}&space;X&space;\Theta" title="Z=\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} X \Theta" /></a>
-
+<a href="https://www.codecogs.com/eqnedit.php?latex=g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" title="g_{\theta^{\prime}} \star x \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L}) x" /></a>
 参考文献  
 Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
 
