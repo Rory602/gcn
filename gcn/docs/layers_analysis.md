@@ -74,8 +74,8 @@ output = tf.add_n(supports)
 
 ```
 以上代码是如下公式的实现:
-<a href="https://www.codecogs.com/eqnedit.php?latex=g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" title="g_{\theta^{\prime}} \star x \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L}) x" /></a>
-参考文献  
+<a href="https://www.codecogs.com/eqnedit.php?latex=g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" title="g_{\theta^{\prime}} \star x \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L}) x" /></a>  
+**参考文献**  
 Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
 
 
