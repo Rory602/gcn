@@ -56,4 +56,20 @@ def chebyshev_polynomials(adj, k):
 &emsp;`laplacian = sp.eye(adj.shape[0]) - adj_normalized`表示:  <a href="https://www.codecogs.com/eqnedit.php?latex=L=I_{n}-D^{-1&space;/&space;2}&space;W&space;D^{-1&space;/&space;2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L=I_{n}-D^{-1&space;/&space;2}&space;W&space;D^{-1&space;/&space;2}" title="L=I_{n}-D^{-1 / 2} W D^{-1 / 2}" /></a>  
 &emsp;&emsp;其中:<a href="https://www.codecogs.com/eqnedit.php?latex=W" target="_blank"><img src="https://latex.codecogs.com/gif.latex?W" title="W" /></a>相当于gcn中的临接矩阵<a href="https://www.codecogs.com/eqnedit.php?latex=A" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A" title="A" /></a>
 `scaled_laplacian = (2. / largest_eigval[0]) * laplacian - sp.eye(adj.shape[0])`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{L}=2&space;L&space;/&space;\lambda_{\max&space;}-I_{n}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{L}=2&space;L&space;/&space;\lambda_{\max&space;}-I_{n}" title="\tilde{L}=2 L / \lambda_{\max }-I_{n}" /></a>  
-&emsp;`2 * s_lap.dot(t_k_minus_one) - t_k_minus_two`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=\bar{x}_{k}=2&space;\tilde{L}&space;\bar{x}_{k-1}-\bar{x}_{k-2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\bar{x}_{k}=2&space;\tilde{L}&space;\bar{x}_{k-1}-\bar{x}_{k-2}" title="\bar{x}_{k}=2 \tilde{L} \bar{x}_{k-1}-\bar{x}_{k-2}" /></a>
+&emsp;`2 * s_lap.dot(t_k_minus_one) - t_k_minus_two`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=T_{k}(x)=2&space;x&space;T_{k-1}(x)-T_{k-2}(x)&space;\text&space;{&space;with&space;}&space;T_{0}=1&space;\text&space;{&space;and&space;}&space;T_{1}=x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?T_{k}(x)=2&space;x&space;T_{k-1}(x)-T_{k-2}(x)&space;\text&space;{&space;with&space;}&space;T_{0}=1&space;\text&space;{&space;and&space;}&space;T_{1}=x" title="T_{k}(x)=2 x T_{k-1}(x)-T_{k-2}(x) \text { with } T_{0}=1 \text { and } T_{1}=x" /></a>  
+
+```python
+    for i in range(2, k+1):
+        t_k.append(chebyshev_recurrence(t_k[-1], t_k[-2], scaled_laplacian))
+```
+以上表示循环计算<a href="https://www.codecogs.com/eqnedit.php?latex=\bar{x}_{k}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\bar{x}_{k}" title="\bar{x}_{k}" /></a>  
+&emsp;&emsp;其中,<a href="https://www.codecogs.com/eqnedit.php?latex=\bar{x}_{0}=x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\bar{x}_{0}=x" title="\bar{x}_{0}=x" /></a>,&emsp;&emsp;<a href="https://www.codecogs.com/eqnedit.php?latex=\bar{x}_{1}=\tilde{L}&space;x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\bar{x}_{1}=\tilde{L}&space;x" title="\bar{x}_{1}=\tilde{L} x" /></a>
+
+
+```python
+
+t_k = list()
+t_k.append(sp.eye(adj.shape[0]))
+t_k.append(scaled_laplacian)
+```
+以上表示初始化的过程
