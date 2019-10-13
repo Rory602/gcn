@@ -75,6 +75,7 @@ output = tf.add_n(supports)
 ```
 以上代码是如下公式的实现:
 <a href="https://www.codecogs.com/eqnedit.php?latex=g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?g_{\theta^{\prime}}&space;\star&space;x&space;\approx&space;\sum_{k=0}^{K}&space;\theta_{k}^{\prime}&space;T_{k}(\tilde{L})&space;x" title="g_{\theta^{\prime}} \star x \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L}) x" /></a>  
+传统的神经网络都是输入变量乘以参数,图卷积神经网络在此基础上加入图结构信息,即<a href="https://www.codecogs.com/eqnedit.php?latex=T_{k}(\tilde{L})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?T_{k}(\tilde{L})" title="T_{k}(\tilde{L})" /></a>,其中K表示传播的深度.
 **参考文献**  
 Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
 
