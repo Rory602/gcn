@@ -1,4 +1,4 @@
-# normalize_adj函数
+# utils
 对应文档中的数学公式为
 ```
 def normalize_adj(adj):
@@ -16,7 +16,8 @@ def preprocess_adj(adj):
     return sparse_to_tuple(adj_normalized)
 ```
 
-其中`normalize_adj`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=D^{-1/2}AD^{-1/2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?D^{-1/2}AD^{-1/2}" title="D^{-1/2}AD^{-1/2}" /></a>  
+
+`normalize_adj`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=D^{-1/2}AD^{-1/2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?D^{-1/2}AD^{-1/2}" title="D^{-1/2}AD^{-1/2}" /></a>  
 `preprocess_adj`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=I_{N}&plus;D^{-\frac{1}{2}}&space;A&space;D^{-\frac{1}{2}}&space;\rightarrow&space;\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I_{N}&plus;D^{-\frac{1}{2}}&space;A&space;D^{-\frac{1}{2}}&space;\rightarrow&space;\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}" title="I_{N}+D^{-\frac{1}{2}} A D^{-\frac{1}{2}} \rightarrow \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}}" /></a>  
 其中:  
  &emsp;&emsp;<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{A}=A&plus;I_{N}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{A}=A&plus;I_{N}" title="\tilde{A}=A+I_{N}" /></a>  
