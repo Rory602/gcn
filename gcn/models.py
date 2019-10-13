@@ -1,5 +1,5 @@
-from gcn.layers import *
-from gcn.metrics import *
+from layers import *
+from metrics import *
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -37,6 +37,7 @@ class Model(object):
 
     def build(self):
         """ Wrapper for _build() """
+        # 构建多层layers
         with tf.variable_scope(self.name):
             self._build()
 

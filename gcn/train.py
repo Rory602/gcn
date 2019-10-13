@@ -1,11 +1,12 @@
 from __future__ import division
 from __future__ import print_function
 
+from tensorflow.python import debug as tf_debug
 import time
 import tensorflow as tf
 
-from gcn.utils import *
-from gcn.models import GCN, MLP
+from utils import *
+from models import GCN, MLP
 
 # Set random seed
 seed = 123
@@ -16,7 +17,7 @@ tf.set_random_seed(seed)
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_string('dataset', 'cora', 'Dataset string.')  # 'cora', 'citeseer', 'pubmed'
-flags.DEFINE_string('model', 'gcn', 'Model string.')  # 'gcn', 'gcn_cheby', 'dense'
+flags.DEFINE_string('model', 'gcn_cheby', 'Model string.')  # 'gcn', 'gcn_cheby', 'dense'
 flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
 flags.DEFINE_integer('epochs', 200, 'Number of epochs to train.')
 flags.DEFINE_integer('hidden1', 16, 'Number of units in hidden layer 1.')
@@ -28,7 +29,7 @@ flags.DEFINE_integer('max_degree', 3, 'Maximum Chebyshev polynomial degree.')
 # Load data
 adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask = load_data(FLAGS.dataset)
 
-# Some preprocessing
+# Some preprocessing,support在layer中的_call函数调用,
 features = preprocess_features(features)
 if FLAGS.model == 'gcn':
     support = [preprocess_adj(adj)]
@@ -60,7 +61,7 @@ model = model_func(placeholders, input_dim=features[2][1], logging=True)
 
 # Initialize session
 sess = tf.Session()
-
+# sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 
 # Define model evaluation function
 def evaluate(features, support, labels, mask, placeholders):
@@ -84,8 +85,10 @@ for epoch in range(FLAGS.epochs):
     feed_dict.update({placeholders['dropout']: FLAGS.dropout})
 
     # Training step
-    outs = sess.run([model.opt_op, model.loss, model.accuracy], feed_dict=feed_dict)
+    outs = sess.run([model.opt_op, model.loss, model.accuracy, model.outputs], feed_dict=feed_dict)
 
+    # outs = sess.run([model.opt_op, model.loss, model.accuracy, model.debug], feed_dict=feed_dict)
+    debug = outs[2]
     # Validation
     cost, acc, duration = evaluate(features, support, y_val, val_mask, placeholders)
     cost_val.append(cost)

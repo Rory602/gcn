@@ -110,7 +110,10 @@ def sparse_to_tuple(sparse_mx):
 
 
 def preprocess_features(features):
-    """Row-normalize feature matrix and convert to tuple representation"""
+    """
+    Row-normalize feature matrix and convert to tuple representation
+    按照行对数据进行标准化
+    """
     rowsum = np.array(features.sum(1))
     r_inv = np.power(rowsum, -1).flatten()
     r_inv[np.isinf(r_inv)] = 0.

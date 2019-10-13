@@ -1,4 +1,4 @@
-from gcn.inits import *
+from inits import *
 import tensorflow as tf
 
 flags = tf.app.flags
@@ -184,5 +184,5 @@ class GraphConvolution(Layer):
         # bias
         if self.bias:
             output += self.vars['bias']
-
-        return self.act(output)
+        return tf.nn.relu(output,name="tf_relu")
+        # return self.act(output)
