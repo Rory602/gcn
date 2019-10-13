@@ -69,3 +69,8 @@ if not self.featureless:
 ```
 以上代码是如下公式的实现:
 <a href="https://www.codecogs.com/eqnedit.php?latex=Z=\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}&space;X&space;\Theta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Z=\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}&space;X&space;\Theta" title="Z=\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} X \Theta" /></a>
+
+参考文献  
+Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
+
+
