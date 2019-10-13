@@ -1,6 +1,6 @@
 # utils
 对应文档中的数学公式为
-```
+```python
 def normalize_adj(adj):
     """Symmetrically normalize adjacency matrix."""
     adj = sp.coo_matrix(adj)
