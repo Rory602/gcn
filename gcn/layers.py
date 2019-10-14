@@ -184,5 +184,4 @@ class GraphConvolution(Layer):
         # bias
         if self.bias:
             output += self.vars['bias']
-        return tf.nn.relu(output,name="tf_relu")
-        # return self.act(output)
+        return self.act(output)
