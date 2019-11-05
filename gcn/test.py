@@ -1,50 +1,72 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 """
-@Time : 2019/10/3 下午8:54 
-@Author : Wang Zhiyuan 
-@Email : wangzhiyuan@geotmt.com
-@File : test.py 
-"""# coding:utf-8
+@Time    : 9/29/19 6:01 PM
+@Author  : Wang Zhiyuan
+@Email   : wangzhiyuan@geotmt.com
+@File    : test.py
+@Project: gcn-master
+"""
 import tensorflow as tf
-from tensorflow.python import debug as tf_debug
-###############################
-"""
-# 一个样本
-###############################
-logits = tf.constant([2,7,5],dtype=tf.float32)
-labels = [0,1,0]
-#对logits使用softmax,[0.00589975 0.8756006  0.11849965]
-res1 = tf.nn.softmax(logits)
-# 交叉熵损失中的各个对数部分,[-5.1328454  -0.13284525 -2.1328452 ]
-res2 = tf.log(res1)
-# 交叉熵损失,0.13284527
-res3 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=labels)
+import time
+from utils import *
+from read_data import *
+from models import GCN, MLP
 
+# Set random seed
+seed = 123
+np.random.seed(seed)
+tf.set_random_seed(seed)
+
+# Settings
+flags = tf.app.flags
+FLAGS = flags.FLAGS
+flags.DEFINE_string('dataset', 'citeseer', 'Dataset string.')  # 'cora', 'citeseer', 'pubmed'
+flags.DEFINE_string('model', 'gcn', 'Model string.')  # 'gcn', 'gcn_cheby', 'dense'
+flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
+flags.DEFINE_integer('epochs', 200, 'Number of epochs to train.')
+flags.DEFINE_integer('hidden1', 16, 'Number of units in hidden layer 1.')
+flags.DEFINE_float('dropout', 0.5, 'Dropout rate (1 - keep probability).')
+flags.DEFINE_float('weight_decay', 5e-4, 'Weight for L2 loss on embedding matrix.')
+flags.DEFINE_integer('early_stopping', 10, 'Tolerance for early stopping (# of epochs).')
+flags.DEFINE_integer('max_degree', 3, 'Maximum Chebyshev polynomial degree.')
+# Some preprocessing
+features = preprocess_features(features)
+if FLAGS.model == 'gcn':
+    support = [preprocess_adj(adj)]
+    num_supports = 1
+    model_func = GCN
+elif FLAGS.model == 'gcn_cheby':
+    support = chebyshev_polynomials(adj, FLAGS.max_degree)
+    num_supports = 1 + FLAGS.max_degree
+    model_func = GCN
+elif FLAGS.model == 'dense':
+    support = [preprocess_adj(adj)]  # Not used
+    num_supports = 1
+    model_func = MLP
+else:
+    raise ValueError('Invalid argument for model: ' + str(FLAGS.model))
+
+# Define placeholders
+placeholders = {
+    'support': [tf.sparse_placeholder(tf.float32) for _ in range(num_supports)],
+    'features': tf.sparse_placeholder(tf.float32, shape=tf.constant(features[2], dtype=tf.int64)),
+    'labels': tf.placeholder(tf.float32, shape=(None, y_train.shape[1])),
+    'labels_mask': tf.placeholder(tf.int32),
+    'dropout': tf.placeholder_with_default(0., shape=()),
+    'num_features_nonzero': tf.placeholder(tf.int32)  # helper variable for sparse dropout
+}
+# Create model
+model = model_func(placeholders, input_dim=features[2][1], logging=True)
+# Define model evaluation function
+def evaluate(features, support, labels, mask, placeholders):
+    t_test = time.time()
+    feed_dict_val = construct_feed_dict(features, support, labels, mask, placeholders)
+    outs_val = sess.run([model.predict(), model.accuracy], feed_dict=feed_dict_val)
+    return outs_val[0], outs_val[1]
+saver = tf.train.Saver()
 with tf.Session() as sess:
-	res1,res2,res3 = sess.run([res1,res2,res3])
-	print(res1)
-	print(res2)
-	print(res3)
-print('====================================================')
-###############################
-"""
-# 多个样本
-###############################
-logits = tf.constant([[2,7,5],[6,3,4]],dtype=tf.float32)
-labels = [[0,1,0],[1,0,0]]
-#对logits使用softmax,[[0.00589975 0.8756006  0.11849965] [0.8437947  0.04201007 0.11419519]]
-res1 = tf.nn.softmax(logits)
-# 交叉熵损失中的各个对数部分,[[-5.1328454  -0.13284525 -2.1328452 ] [-0.16984606 -3.169846   -2.169846  ]]
-res2 = tf.log(res1)
-# 交叉熵损失,[0.13284527 0.16984604]
-res3 = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=labels,name="test")
-# 求出交叉熵损失后再对各个样本的交叉熵损失取平均,0.15134566
-res4 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=labels))
-sess = tf.Session()
-sess = tf_debug.LocalCLIDebugWrapperSession(sess)
-res1,res2,res3,res4 = sess.run([res1,res2,res3,res4])
-print(res1)
-print(res2)
-print(res3)
-print(res4)
-sess.close()
+    saver.restore(sess, "model/gcn.ckpt")
+    # Testing
+    predict, test_acc = evaluate(features, support, y_test, test_mask, placeholders)
+    print(predict)
+    print("accuracy=", "{:.5f}".format(test_acc))
