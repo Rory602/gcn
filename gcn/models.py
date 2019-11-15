@@ -1,6 +1,7 @@
 from layers import *
 from metrics import *
-
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 

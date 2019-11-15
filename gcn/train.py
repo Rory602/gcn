@@ -1,9 +1,10 @@
 from __future__ import division
 from __future__ import print_function
 
-from tensorflow.python import debug as tf_debug
+# from tensorflow.python import debug as tf_debug
 import time
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 from utils import *
 from models import GCN, MLP
