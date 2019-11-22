@@ -16,9 +16,9 @@ import scipy.sparse as sp
 import pickle as pkl
 import sys
 from utils import parse_index_file
+
 def generate_data():
     sample_num = 2000
-
     features_num = 500
     mask = int(sample_num*0.3)*["train"]+int(sample_num*0.4)*["valid"]+int(sample_num-int(sample_num*0.3)-int(sample_num*0.4))*["test"]
     np.random.shuffle(mask)

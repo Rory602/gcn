@@ -10,7 +10,7 @@ import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 import time
 from utils import *
-from read_data import *
+from loadata  import *
 from models import GCN, MLP
 
 # Set random seed
