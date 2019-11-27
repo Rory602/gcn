@@ -2,8 +2,8 @@
 ```python
 
 def masked_accuracy(preds, labels, mask):
-    """Accuracy with masking.先从correct_prediction中过滤出mask包含的正确答案个数,除以mask中个数"""
-    correct_prediction = tf.equal(tf.argmax(preds, 1), tf.argmax(labels, 1),name="accuracy")
+    """Accuracy with masking.先从correct_prediction中过滤出mask包含的正确答案个数,除以mask中个    			数"""
+    correct_prediction = tf.equal(tf.argmax(preds, 1), tf.argmax(labels, 				                                     1),name="accuracy")
     accuracy_all = tf.cast(correct_prediction, tf.float32)
     mask = tf.cast(mask, dtype=tf.float32)
     # 另一种计算方式如下:

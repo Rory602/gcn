@@ -12,18 +12,19 @@ def normalize_adj(adj):
     return adj.dot(d_mat_inv_sqrt).transpose().dot(d_mat_inv_sqrt).tocoo()
     
 def preprocess_adj(adj):
-    """Preprocessing of adjacency matrix for simple GCN model and conversion to tuple representation."""
+    """Preprocessing of adjacency matrix for simple GCN model and conversion to tuple 			representation."""
     adj_normalized = normalize_adj(adj + sp.eye(adj.shape[0]))
     return sparse_to_tuple(adj_normalized)
 ```
 
 **解析:**  
-`normalize_adj`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=D^{-1/2}AD^{-1/2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?D^{-1/2}AD^{-1/2}" title="D^{-1/2}AD^{-1/2}" /></a>  
-`preprocess_adj`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=I_{N}&plus;D^{-\frac{1}{2}}&space;A&space;D^{-\frac{1}{2}}&space;\rightarrow&space;\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?I_{N}&plus;D^{-\frac{1}{2}}&space;A&space;D^{-\frac{1}{2}}&space;\rightarrow&space;\tilde{D}^{-\frac{1}{2}}&space;\tilde{A}&space;\tilde{D}^{-\frac{1}{2}}" title="I_{N}+D^{-\frac{1}{2}} A D^{-\frac{1}{2}} \rightarrow \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}}" /></a>  
+`normalize_adj`表示: $D^{-1/2}AD^{-1/2}$
+`preprocess_adj`表示: $I_N+D^{-\frac{1}{2}}AD^{-\frac{1}{2}}\rightarrow \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}}$
 其中:  
- &emsp;&emsp;<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{A}=A&plus;I_{N}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{A}=A&plus;I_{N}" title="\tilde{A}=A+I_{N}" /></a>  
- &emsp;&emsp;<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{D}_{i&space;i}=\sum_{j}&space;\tilde{A}_{i&space;j}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{D}_{i&space;i}=\sum_{j}&space;\tilde{A}_{i&space;j}" title="\tilde{D}_{i i}=\sum_{j} \tilde{A}_{i j}" /></a>
- 
+
+​			 $\tilde{A}=A+I_N$ 
+
+​            $\tilde{D}_{ii}=\sum_j\tilde{A}_{ij}$
 
 **参考文献**  
 Thomas N. Kipf, Max Welling, [Semi-Supervised Classification with Graph Convolutional Networks](http://arxiv.org/abs/1609.02907) (ICLR 2017)
@@ -53,20 +54,30 @@ def chebyshev_polynomials(adj, k):
     return sparse_to_tuple(t_k)
 ```
 **解析**  
-&emsp;`laplacian = sp.eye(adj.shape[0]) - adj_normalized`表示:  <a href="https://www.codecogs.com/eqnedit.php?latex=L=I_{n}-D^{-1&space;/&space;2}&space;W&space;D^{-1&space;/&space;2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L=I_{n}-D^{-1&space;/&space;2}&space;W&space;D^{-1&space;/&space;2}" title="L=I_{n}-D^{-1 / 2} W D^{-1 / 2}" /></a>  
-&emsp;&emsp;其中:<a href="https://www.codecogs.com/eqnedit.php?latex=W" target="_blank"><img src="https://latex.codecogs.com/gif.latex?W" title="W" /></a>相当于gcn中的临接矩阵<a href="https://www.codecogs.com/eqnedit.php?latex=A" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A" title="A" /></a>
-`scaled_laplacian = (2. / largest_eigval[0]) * laplacian - sp.eye(adj.shape[0])`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{L}=2&space;L&space;/&space;\lambda_{\max&space;}-I_{n}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{L}=2&space;L&space;/&space;\lambda_{\max&space;}-I_{n}" title="\tilde{L}=2 L / \lambda_{\max }-I_{n}" /></a>  
-&emsp;`2 * s_lap.dot(t_k_minus_one) - t_k_minus_two`表示: <a href="https://www.codecogs.com/eqnedit.php?latex=T_{k}(x)=2&space;x&space;T_{k-1}(x)-T_{k-2}(x)&space;\text&space;{&space;with&space;}&space;T_{0}=1&space;\text&space;{&space;and&space;}&space;T_{1}=x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?T_{k}(x)=2&space;x&space;T_{k-1}(x)-T_{k-2}(x)&space;\text&space;{&space;with&space;}&space;T_{0}=1&space;\text&space;{&space;and&space;}&space;T_{1}=x" title="T_{k}(x)=2 x T_{k-1}(x)-T_{k-2}(x) \text { with } T_{0}=1 \text { and } T_{1}=x" /></a>  
+
+1.`laplacian = sp.eye(adj.shape[0]) - adj_normalized`表示:   $L=I_n-D^{-\frac{1}{2}}WD^{-\frac{1}{2}}$
+&emsp;&emsp;其中:<a href="https://www.codecogs.com/eqnedit.php?latex=W" target="_blank"><img src="https://latex.codecogs.com/gif.latex?W" title="W" /></a>相当于gcn中的临接矩阵$A$
+
+2.`scaled_laplacian = (2. / largest_eigval[0]) * laplacian - sp.eye(adj.shape[0])`表示:  $\qquad\tilde{L}=2L/\lambda_{max}-I_n$
+
+3.`2 * s_lap.dot(t_k_minus_one) - t_k_minus_two`表示:   $\qquad T_k(x)=2xT_{k-1}(x)-T_{k-2}(x)\qquad 其中：T_0=1,T_1=x$
+
+4.
 
 ```python
 for i in range(2, k+1):
     t_k.append(chebyshev_recurrence(t_k[-1], t_k[-2], scaled_laplacian))
 ```
-以上表示循环计算![](https://cdn.mathpix.com/snip/images/vcjXm7KU4kHY3-6ECxN28PVmmED9luoV58H8hfVY2VA.original.fullsize.png)
-```python
+​	以上表示循环计算$T_k(x)=2xT_{k-1}(x)-T_{k-2}(x)$ 
 
+5.
+
+```python
 t_k = list()
 t_k.append(sp.eye(adj.shape[0]))
 t_k.append(scaled_laplacian)
 ```
-以上表示初始化的过程,将scaled Laplacian,令: <a href="https://www.codecogs.com/eqnedit.php?latex=\widetilde{L}=x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\widetilde{L}=x" title="\widetilde{L}=x" /></a>
+​	以上表示初始化的过程,将scaled Laplacian,令: $\tilde{L}=x$
+
+
+

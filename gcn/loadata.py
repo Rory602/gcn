@@ -4,7 +4,7 @@
 @Author  : Wang Zhiyuan
 @Email   : wangzhiyuan@geotmt.com
 @File    : generate_data.py
-@Project: gcn-master
+@Project: gcn
 """
 import pandas as pd
 import numpy as np
